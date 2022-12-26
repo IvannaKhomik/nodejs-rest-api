@@ -2,7 +2,8 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const { DB_HOST } = require("./config");
+
+const { DB_HOST } = process.env;
 
 mongoose.set("strictQuery", true);
 mongoose
