@@ -1,12 +1,11 @@
 const Joi = require("joi");
 
-const schema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().required(),
-  phone: Joi.required(),
-});
-
 const postValidation = (req, res, next) => {
+  const schema = Joi.object({
+    name: Joi.string().required(),
+    email: Joi.string().required(),
+    phone: Joi.required(),
+  });
   const validationResult = schema.validate(req.body);
   if (validationResult.error) {
     res.status(400).json({
@@ -19,6 +18,11 @@ const postValidation = (req, res, next) => {
 };
 
 const putValidation = (req, res, next) => {
+  const schema = Joi.object({
+    name: Joi.string().optional(),
+    email: Joi.string().optional(),
+    phone: Joi.string().optional(),
+  }).required();
   const validationResult = schema.validate(req.body);
   if (validationResult.error) {
     res.status(400).json({

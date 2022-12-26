@@ -49,7 +49,7 @@ const postContact = async (req, res) => {
 
 const deleteContact = async (req, res) => {
   const { contactId } = req.params;
-  const deletedContact = removeContact(contactId);
+  const deletedContact = await removeContact(contactId);
   if (!deletedContact) {
     res.json({
       status: "error",
@@ -62,12 +62,20 @@ const deleteContact = async (req, res) => {
     status: "success",
     code: 200,
     message: "Contact deleted",
-    deletedContact,
   });
 };
 
 const putContact = async (req, res) => {
   const { contactId } = req.params;
+  const body = Object.keys(req.body);
+  if (body.length === 0) {
+    res.json({
+      status: "error",
+      code: 400,
+      message: "Missing fields",
+    });
+    return;
+  }
   const { name, email, phone } = req.body;
   const changedContact = await updateContact(contactId, name, email, phone);
   if (!changedContact) {

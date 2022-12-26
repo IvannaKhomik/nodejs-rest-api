@@ -61,11 +61,17 @@ const updateContact = async (contactId, name, email, phone) => {
       (contact) => contact.id === contactId
     );
     if (!changedContact) {
-      return undefined;
+      return null;
     }
-    changedContact.name = name;
-    changedContact.email = email;
-    changedContact.phone = phone;
+    if (name) {
+      changedContact.name = name;
+    }
+    if (email) {
+      changedContact.email = email;
+    }
+    if (phone) {
+      changedContact.phone = phone;
+    }
     await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
     return changedContact;
   } catch (err) {
