@@ -2,9 +2,8 @@ const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const { DB_HOST } = require("./config");
 
-const DB_HOST =
-  "mongodb+srv://Ivanna:Tv0YDKALZsJtcF1X@cluster0.qvlap8z.mongodb.net/db-contacts?retryWrites=true&w=majority";
 mongoose.set("strictQuery", true);
 mongoose
   .connect(DB_HOST)
