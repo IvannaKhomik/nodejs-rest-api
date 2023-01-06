@@ -1,13 +1,11 @@
-const {
-  listContacts,
-  getContactById,
-  addContact,
-  removeContact,
-  updateContact,
-} = require("../models/contacts");
+const Contact = require("../models/contact");
+const { HttpError, ctrlWrapper } = require("../helpers");
 
-const getContacts = async (_, res) => {
-  const contacts = await listContacts();
+const getContacts = async (_, res, next) => {
+  const contacts = await Contact.find();
+  if (!contacts) {
+    throw HttpError(404, "No contacts found");
+  }
   res.json({
     status: "success",
     code: 200,
@@ -17,15 +15,14 @@ const getContacts = async (_, res) => {
   });
 };
 
-const getById = async (req, res) => {
+const getById = async (req, res, next) => {
   const { contactId } = req.params;
-  const contact = await getContactById(contactId);
+  const contact = await Contact.findById(contactId);
 
   if (!contact) {
-    return res
-      .status(404)
-      .json({ status: "error", code: 404, message: "Contact was not found" });
+    throw HttpError(404, "Contact was not found");
   }
+
   res.json({
     status: "success",
     code: 200,
@@ -35,9 +32,8 @@ const getById = async (req, res) => {
   });
 };
 
-const postContact = async (req, res) => {
-  const { name, email, phone } = req.body;
-  const newContact = await addContact(name, email, phone);
+const postContact = async (req, res, next) => {
+  const newContact = await Contact.create(req.body);
   res.status(201).json({
     status: "success",
     code: 201,
@@ -47,16 +43,11 @@ const postContact = async (req, res) => {
   });
 };
 
-const deleteContact = async (req, res) => {
+const deleteContact = async (req, res, next) => {
   const { contactId } = req.params;
-  const deletedContact = await removeContact(contactId);
+  const deletedContact = await Contact.findByIdAndRemove(contactId);
   if (!deletedContact) {
-    res.json({
-      status: "error",
-      code: 404,
-      message: "Not found",
-    });
-    return;
+    throw HttpError(404);
   }
   res.json({
     status: "success",
@@ -65,26 +56,34 @@ const deleteContact = async (req, res) => {
   });
 };
 
-const putContact = async (req, res) => {
+const updateContact = async (req, res, next) => {
   const { contactId } = req.params;
   const body = Object.keys(req.body);
   if (body.length === 0) {
-    res.json({
-      status: "error",
-      code: 400,
-      message: "Missing fields",
-    });
-    return;
+    throw HttpError(400, "Missing fields");
   }
-  const { name, email, phone } = req.body;
-  const changedContact = await updateContact(contactId, name, email, phone);
+  const changedContact = await Contact.findByIdAndUpdate(contactId, req.body, {
+    new: true,
+  });
   if (!changedContact) {
-    res.json({
-      status: "error",
-      code: 404,
-      message: "Not found",
-    });
-    return;
+    throw HttpError(404);
+  }
+  res.json({
+    status: "success",
+    code: 200,
+    data: {
+      contact: changedContact,
+    },
+  });
+};
+
+const updateStatusContact = async (req, res, next) => {
+  const { contactId } = req.params;
+  const changedContact = await Contact.findByIdAndUpdate(contactId, req.body, {
+    new: true,
+  });
+  if (!changedContact) {
+    throw HttpError(404);
   }
   res.json({
     status: "success",
@@ -96,9 +95,10 @@ const putContact = async (req, res) => {
 };
 
 module.exports = {
-  getContacts,
-  getById,
-  postContact,
-  deleteContact,
-  putContact,
+  getContacts: ctrlWrapper(getContacts),
+  getById: ctrlWrapper(getById),
+  postContact: ctrlWrapper(postContact),
+  deleteContact: ctrlWrapper(deleteContact),
+  updateContact: ctrlWrapper(updateContact),
+  updateStatusContact: ctrlWrapper(updateStatusContact),
 };
