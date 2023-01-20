@@ -1,8 +1,9 @@
-const Contact = require("../../models/contact");
+const { Contact } = require("../../models");
 const { ctrlWrapper } = require("../../helpers");
 
 const postContact = async (req, res, next) => {
-  const newContact = await Contact.create(req.body);
+  const { _id: owner } = req.user;
+  const newContact = await Contact.create({ ...req.body, owner });
   res.status(201).json({
     status: "success",
     code: 201,
