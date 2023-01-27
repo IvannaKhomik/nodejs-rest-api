@@ -11,6 +11,7 @@ const {
 } = require("../../controllers/contacts");
 
 const { validateBody, authenticate } = require("../../middlewares");
+
 const {
   addSchema,
   putSchema,
