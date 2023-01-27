@@ -5,7 +5,7 @@ const registerSchema = Joi.object({
   password: Joi.string().min(6).required(),
   email: Joi.string().pattern(emailRegexp).required(),
   subscription: Joi.string().required,
-  // token: Joi.string(),
+  token: Joi.string(),
 });
 
 module.exports = {
