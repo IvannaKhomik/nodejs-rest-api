@@ -1,11 +1,11 @@
 const HttpError = require("./HttpError");
 const ctrlWrapper = require("./ctrlWrapper");
 const handleError = require("./handleMongooseError");
-const normalizeUserAvatar = require("./normalizeUserAvatar");
+const sendEmail = require("./sendEmail");
 
 module.exports = {
   HttpError,
   ctrlWrapper,
   handleError,
-  normalizeUserAvatar,
+  sendEmail,
 };
