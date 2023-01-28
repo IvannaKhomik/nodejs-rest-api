@@ -1,5 +1,6 @@
-const { ctrlWrapper, HttpError, sendEmail } = require("../../helpers");
+const { ctrlWrapper, HttpError} = require("../../helpers");
 const { User } = require("../../models");
+const { sendEmail } = require("../../services/email");
 const { BASE_URL } = process.env;
 
 const resendVerify = async (req, res) => {

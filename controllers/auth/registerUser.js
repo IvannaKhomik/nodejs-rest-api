@@ -1,11 +1,11 @@
 const { User } = require("../../models");
 const gravatar = require("gravatar");
 const { nanoid } = require("nanoid");
-const { sendEmail } = require("../../helpers");
 const { BASE_URL } = process.env;
 
 const bcrypt = require("bcryptjs");
 const { HttpError, ctrlWrapper } = require("../../helpers");
+const { sendEmail } = require("../../services/email");
 
 const registerUser = async (req, res, next) => {
   const { email, password } = req.body;
